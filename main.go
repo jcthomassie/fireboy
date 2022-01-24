@@ -1,34 +1,29 @@
 package main
 
 import (
-	"flag"
 	"fmt"
+	"log"
 	"os"
 	"os/signal"
 	"strings"
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/joho/godotenv"
 )
-
-// Variables used for command line parameters
-var (
-	Token string
-)
-
-func init() {
-
-	flag.StringVar(&Token, "t", "", "Bot Token")
-	flag.Parse()
-}
 
 func main() {
+	// Load local env file
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file: ", err)
+	}
+	token := os.Getenv("DISCORD_TOKEN")
 
 	// Create a new Discord session using the provided bot token.
-	dg, err := discordgo.New("Bot " + Token)
+	dg, err := discordgo.New("Bot " + token)
 	if err != nil {
-		fmt.Println("error creating Discord session,", err)
-		return
+		log.Fatal("Error loading .env file: ", err)
 	}
 
 	// Register the messageCreate func as a callback for MessageCreate events.
@@ -40,8 +35,7 @@ func main() {
 	// Open a websocket connection to Discord and begin listening.
 	err = dg.Open()
 	if err != nil {
-		fmt.Println("error opening connection,", err)
-		return
+		log.Fatal("Error opening connection: ", err)
 	}
 
 	// Wait here until CTRL-C or other term signal is received.
@@ -59,12 +53,11 @@ func main() {
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	// Ignore all messages created by the bot itself
-	// This isn't required in this specific example but it's a good practice.
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
 
-	var channel, _ = s.Channel(m.ChannelID)
+	channel, _ := s.Channel(m.ChannelID)
 	fmt.Println("received message in channel named: ", channel.Name)
 	fmt.Println("received message content: ", m.Content)
 

@@ -1,6 +1,14 @@
 # fireboy
 
+## Setup
+
+Add the bot discord token to `fireboy/.env`:
+
 ```
-go build
-go run fireboy -t $DISCORD_TOKEN
+echo 'DISCORD_TOKEN=**********' > .env
+```
+
+Run the bot:
+```
+go run fireboy
 ```
