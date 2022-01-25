@@ -65,7 +65,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	channel, _ := s.Channel(m.ChannelID)
 	fmt.Println("received message in channel named: ", channel.Name)
 	fmt.Println("received message content: ", m.Content)
-  // end log messages
+	// end log messages
 
 	if strings.HasPrefix(m.Content, triggerstr) {
 		s.ChannelMessageSend(m.ChannelID, strings.TrimPrefix(m.Content, triggerstr))
