@@ -57,13 +57,16 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
-  triggerstr := os.Getenv("TRIGGER_STRING") // Production uses ;;fb
+
+	triggerstr := os.Getenv("TRIGGER_STRING") // Production uses ;;fb
 	if triggerstr == "" { triggerstr = ";;fb" } // set to prod default
+
 	// Printing logs to console
 	channel, _ := s.Channel(m.ChannelID)
 	fmt.Println("received message in channel named: ", channel.Name)
 	fmt.Println("received message content: ", m.Content)
   // end log messages
+
 	if strings.HasPrefix(m.Content, triggerstr) {
 		s.ChannelMessageSend(m.ChannelID, strings.TrimPrefix(m.Content, triggerstr))
 	}
